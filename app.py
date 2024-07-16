@@ -13,6 +13,7 @@ import datetime
 from datetime import datetime
 from config import Config
 from models import db, User
+from auth import route_auth
 
 load_dotenv()
 
@@ -51,27 +52,6 @@ def get_db_connection():
     )
     return conn
 
-# class User(UserMixin):
-#     def __init__(self, id, username, password, email):
-#         self.id = id
-#         self.username = username
-#         self.password = password
-#         self.email = email
-    
-#     def __repr__(self):
-#         return f"User(id={self.id}, username={self.username}, email={self.email})"
-
-# class User(db.Model):
-#     __tablename__ = 'user'
-#     uuid = db.Column(db.String, primary_key=True)
-#     userName = db.Column(db.String(80), nullable=False)
-#     email = db.Column(db.String(120), unique=True, nullable=False)
-#     password = db.Column(db.String(128), nullable=False)
-#     status = db.Column(db.String(20), nullable=False)
-
-#     def __repr__(self):
-#         return f'<User {self.userName}>'
-
 with app.app_context():
     # Create tables if they don't exist
     db.create_all()
@@ -97,63 +77,66 @@ def signup():
     else:
         return render_template('register.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        try:
-            username = request.form.get('username')
-            password = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            email = request.form.get('email')
-            print(email)
+# @app.route('/register', methods=['GET', 'POST'])
+# def register():
+#     if request.method == 'POST':
+#         try:
+#             username = request.form.get('username')
+#             password = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+#             email = request.form.get('email')
+#             print(email)
 
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", (username, password, email))
-            conn.commit()
+#             conn = get_db_connection()
+#             cur = conn.cursor()
+#             cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", (username, password, email))
+#             conn.commit()
             
-            # Retrieve the id of the user based on their email
-            cur.execute("SELECT id FROM users WHERE email = %s", (email,))
-            user_id = cur.fetchone()[0]
+#             # Retrieve the id of the user based on their email
+#             cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+#             user_id = cur.fetchone()[0]
 
-            # Automatically log in the user
-            user = User(user_id, username, password, email)  # Replace with your User model
-            print(user)
-            login_user(user)
+#             # Automatically log in the user
+#             user = User(user_id, username, password, email)  # Replace with your User model
+#             print(user)
+#             login_user(user)
 
-            # Redirect to the create-checkout-session route
-            return create_checkout_session()
+#             # Redirect to the create-checkout-session route
+#             return create_checkout_session()
         
-        except Exception as e:
-            # Rollback the transaction in case of error
-            conn.rollback()
-            # Log the error for debugging
-            print(str(e))
-            # Return a response with a 500 Internal Server Error status code
-            return jsonify({'error': 'An error occurred during registration'}), 500
-    return render_template('register.html')
+#         except Exception as e:
+#             # Rollback the transaction in case of error
+#             conn.rollback()
+#             # Log the error for debugging
+#             print(str(e))
+#             # Return a response with a 500 Internal Server Error status code
+#             return jsonify({'error': 'An error occurred during registration'}), 500
+#     return render_template('register.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password').encode('utf-8')
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-        user = cur.fetchone()
-        if user and bcrypt.checkpw(password, user[2].encode('utf-8')):
-            login_user(User(user[0], user[1], user[2],user[3]))
-            return redirect(url_for('index'))
-        else:
-            return 'Invalid username or password'
-    return render_template('login.html')
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form.get('username')
+#         password = request.form.get('password').encode('utf-8')
+#         conn = get_db_connection()
+#         cur = conn.cursor()
+#         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+#         user = cur.fetchone()
+#         if user and bcrypt.checkpw(password, user[2].encode('utf-8')):
+#             login_user(User(user[0], user[1], user[2],user[3]))
+#             return redirect(url_for('index'))
+#         else:
+#             return 'Invalid username or password'
+#     return render_template('login.html')
 
-@app.route('/logout')
-@login_required
-def logout():
-    #I can change this to the index route instead
-    logout_user()
-    return redirect(url_for('index'))
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     #I can change this to the index route instead
+#     logout_user()
+#     return redirect(url_for('index'))
+
+# Register the authentication blueprints
+# route_auth(app)
 
 @app.route('/manage')
 @login_required
@@ -192,7 +175,6 @@ def manage_subscription():
     # Pass the subscription details to the template
     return render_template('manage.html', subscription=subscription, start_date=start_date, end_date=end_date, cancel_date=cancel_date, plan_product_id=plan_product_id, plan_amount=plan_amount, plan_product_name=plan_product_name)
 
-
 @app.route('/')
 def index():
     # If user is not logged in, display landing.html template
@@ -224,10 +206,6 @@ def index():
     # If customer_id is not null and end_date is in the past, redirect to manage subscription
     else:
         return redirect(url_for('manage_subscription'))
-
-
-
-
 
 @app.route('/filtered-data', methods=['POST'])
 def get_filtered_data():
@@ -465,6 +443,7 @@ def webhook_received():
         print('Subscription canceled: %s', event.id)
 
     return jsonify({'status': 'success'})
+
 def checkout_session_completed(email, customer_id, subscription_id, name):
     # Retrieve the subscription
     subscription = stripe.Subscription.retrieve(subscription_id)
@@ -492,6 +471,7 @@ def checkout_session_completed(email, customer_id, subscription_id, name):
     conn.commit()
     cur.close()
     conn.close()
+
 def update_subscription(customer_id, subscription_id, current_period_start, current_period_end, product, status):
     # Convert Unix timestamps to datetime objects
     start_date = datetime.fromtimestamp(current_period_start)
@@ -514,6 +494,7 @@ def update_subscription(customer_id, subscription_id, current_period_start, curr
     conn.commit()
     cur.close()
     conn.close()
+
 @app.route('/checkout')
 def checkout():
     #this changes to the landing page
