@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page</title>
+    <style>
+        .pricing-table {
+            display: flex;
+            justify-content: space-around;
+        }
+        .pricing-option {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Use Jinja2 to conditionally display the login button -->
+    {% if not current_user.is_authenticated %}
+        <a href="/login" class="login-button">Login</a>
+    {% else %}
+        <p>Hello, {{ current_user.email }}, please select a plan to get started</p>
+        <a href="/logout" class="logout-button">Logout</a>
+    {% endif %}
+
+
+    <h2>Clear Title with Keywords for SEO</h2>
+    <h3>Subtitle with the value prop</h3>
+
+    <div class="pricing-table">
+        <div class="pricing-option">
+            <h4>Pro Plan</h4>
+            <p>$20/mo</p>
+            <form action="/sign-up" method="POST">
+                <input type="hidden" name="lookup_key" value="price_1PM9OJGrYum9FiR6X4Prc0Em" />
+                <button type="submit">Get Started</button>
+            </form>
+        </div>
+        <div class="pricing-option">
+            <h4>Agency Plan</h4>
+            <p>$50/mo</p>
+            <form action="/sign-up" method="POST">
+                <input type="hidden" name="lookup_key" value="agency" />
+                <button type="submit">Get Started</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

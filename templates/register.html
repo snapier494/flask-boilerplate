@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <form action="/register" method="post">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" class="form-check-input" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" class="form-check-input" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" class="form-check-input" required><br>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+    <script
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        var username = document.querySelector('#username').value;
+        var email = document.querySelector('#email').value;
+        var password = document.querySelector('#password').value;
+    
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/login';
+            } else {
+                // Handle error...
+                var errorMessage = data.error;
+                alert(errorMessage);
+            }
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+</body>
+</html>

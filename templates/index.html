@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Filter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div style="float: right;">
+            {% if current_user.is_authenticated %}
+                <p>Welcome, {{ current_user.username }}!</p>
+                <a href="/logout" class="header-button">Logout</a>
+                <a href="/manage" class="header-button">Manage Subscription</a>
+            {% else %}
+                <p>Welcome, guest!</p>
+            {% endif %}
+        </div>
+        <div style="clear: both;"></div>
+    </header>
+    <div class="container mt-5">
+        <h1 class="mb-4">Book Filter Demo 2 - Bootstraps </h1>
+        <form id="filterForm" class="mb-4">
+            <div class="form-group">
+                <label for="rating_min">Rating Min</label>
+                <input type="number" id="rating_min" name="rating_min" step="0.1" min=".5" max="5">
+            </div>
+            <div class="form-group">
+                <label for="rating_max">Rating Max</label>
+                <input type="number" id="rating_max" name="rating_max" step="0.1" min=".5" max="5">
+            </div>
+            <div class="form-group">
+                <label for="min_price">Min Price</label>
+                <input type="number" id="min_price" name="min_price" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="max_price">Max Price</label>
+                <input type="number" id="max_price" name="max_price" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="author">Author Contains</label>
+                <input type="text" id="author" name="author">
+            </div>
+            <div class="form-group">
+                <label for="title">Title Contains</label>
+                <input type="text" id="title" name="title">
+            </div>
+            <div class="form-group">
+                <label for="min_units">Min Units</label>
+                <input type="number" id="min_units" name="min_units">
+            </div>
+            <div class="form-group">
+                <label for="max_units">Max Units</label>
+                <input type="number" id="max_units" name="max_units">
+            </div>
+            <div class="form-group">
+                <label for="min_profit_monthly">Min Monthly Profit</label>
+                <input type="number" id="min_profit_monthly" name="min_profit_monthly" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="max_profit_monthly">Max Monthly Profit</label>
+                <input type="number" id="max_profit_monthly" name="max_profit_monthly" step="0.01">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" id="publisher" name="publisher">
+                <label for="publisher">Independently Published</label>
+            </div>
+            <button type="button" onclick="fetchData()">Filter</button>
+        </form>
+
+        <div id="resultsInfoAndButton">
+            <div id="resultsInfo">1-20 of 200 Results</div>
+            <button id="saveToListButton" style="display: none;">Save to List</button>
+        </div>
+
+
+        <div class="table-container">
+            <table class="table" id="resultsTable" style='display: none;'>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th onclick="sortTable(1, 'resultsTable', 'text')">Title &#9652;&#9662;</th>
+                        <th>Format</th>
+                        <th onclick="sortTable(3, 'resultsTable', 'number')">Rating &#9652;&#9662;</th>
+                        <th onclick="sortTable(4, 'resultsTable', 'number')">Reviews &#9652;&#9662;</th>
+                        <th>Publisher</th>
+                        <th onclick="sortTable(6, 'resultsTable', 'number')">Price &#9652;&#9662;</th>
+                        <th onclick="sortTable(7, 'resultsTable', 'number')">Pages &#9652;&#9662;</th>
+                        <th onclick="sortTable(8, 'resultsTable', 'number')">Rank &#9652;&#9662;</th>
+                        <th>Author</th>
+                        <th onclick="sortTable(10, 'resultsTable', 'number')">Royalty &#9652;&#9662;</th>
+                        <th onclick="sortTable(11, 'resultsTable', 'number')">Units &#9652;&#9662;</th>
+                        <th onclick="sortTable(12, 'resultsTable', 'number')">Monthly Profit &#9652;&#9662;</th>
+                        <th>URL</th>            
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination" style="display: none;">
+            <label for="resultsPerPage">Results per page:</label>
+            <select id="resultsPerPage">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <button id="prevPage">Previous</button>
+            <button id="nextPage">Next</button>
+        </div>
+
+    <!-- Script placed at the end of the body -->
+    <script>
+        let allData = [];
+        let limit = 20; // Default results per page
+        let offset = 0; // Current page offset
+
+        async function fetchData() {
+            const form = document.getElementById('filterForm');
+            const formData = new FormData(form);
+            const data = { limit: 200, offset: 0 }; // Fetch 200 records initially
+
+            for (const pair of formData.entries()) {
+                if (pair[1]) {
+                    if (pair[0] === 'publisher') {
+                        data[pair[0]] = form.querySelector('input[name="publisher"]').checked;
+                    } else {
+                        data[pair[0]] = pair[1];
+                    }
+                }
+            }
+
+            // Collect min and max rating values and nest them in the rating object
+            const ratingMin = form.querySelector('input[name="rating_min"]').value;
+            const ratingMax = form.querySelector('input[name="rating_max"]').value;
+            if (ratingMin || ratingMax) {
+                data['rating'] = {};
+                if (ratingMin) {
+                    data['rating']['min'] = ratingMin;
+                }
+                if (ratingMax) {
+                    data['rating']['max'] = ratingMax;
+                }
+            }
+
+            const response = await fetch('/filtered-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            allData = result; // Store fetched data globally
+            offset = 0; // Reset to the first page
+            displayData(); // Display the first page of data
+        }
+
+        function displayData() {
+            const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            const start = offset * limit;
+            const end = Math.min(start + limit, allData.length);
+
+            if (allData.length > 0) {
+                document.getElementById('resultsTable').style.display = 'table';
+                for (let i = start; i < end; i++) {
+                    const row = allData[i];
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><input type="checkbox" class="bookCheckbox"></td>
+                        <td>${row.title}</td>
+                        <td>${row.format}</td>
+                        <td>${parseFloat(row.rating).toFixed(1)}</td>
+                        <td>${parseInt(row.ratings_total).toLocaleString()}</td>
+                        <td>${row.publisher}</td>
+                        <td>$${parseFloat(row.price).toFixed(2)}</td>
+                        <td>${parseInt(row.page_count).toLocaleString()}</td>
+                        <td>${parseInt(row.bsr).toLocaleString()}</td>
+                        <td>${row.author}</td>
+                        <td>$${parseFloat(row.royalty).toFixed(2)}</td>
+                        <td>${parseInt(row.units).toLocaleString()}</td>
+                        <td>$${parseInt(row.profit_monthly).toFixed(0)}</td>
+                        <td><a href="${row.link}" target="_blank">View</a></td>
+                    `;
+                    tableBody.appendChild(tr);
+                }
+
+                // After the table is generated, get the checkboxes and button
+                var checkboxes = document.querySelectorAll('.bookCheckbox');
+                var button = document.getElementById('saveToListButton');
+
+                // Add a click event listener to each checkbox
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('click', function() {
+                        // If any checkbox is checked, enable the button and show it, otherwise disable it and hide it
+                        var anyChecked = Array.from(checkboxes).some(c => c.checked);
+                        button.disabled = !anyChecked;
+                        button.style.display = anyChecked ? 'inline-block' : 'none';
+                    });
+                });
+
+                // Add a click event listener to the button
+                button.addEventListener('click', function() {
+                    // Save the selected books to the list
+                    // You'll need to implement this function yourself
+                    saveSelectedBooksToList();
+                });
+
+
+                // Make the pagination controls visible
+                document.querySelector('.pagination').style.display = 'block';
+
+                // Hide the "Previous" button if there is no previous page
+                document.getElementById('prevPage').style.display = offset > 0 ? 'inline-block' : 'none';
+
+                // Hide the "Next" button if there is no next page
+                document.getElementById('nextPage').style.display = end < allData.length ? 'inline-block' : 'none';
+
+                // After fetching data, update the results info
+                const currentPage = offset / limit + 1;
+                const totalResults = allData.length;
+                updateResultsInfo(currentPage, limit, totalResults);
+            } else {
+                document.getElementById('resultsTable').style.display = 'none';
+                document.querySelector('.pagination').style.display = 'none';
+            }
+        }
+
+        function updateResultsInfo(currentPage, resultsPerPage, totalResults) {
+            const start = totalResults > 0 ? (currentPage - 1) * resultsPerPage + 1 : 0;
+            const end = Math.min(currentPage * resultsPerPage, totalResults);
+            const resultsInfo = document.getElementById('resultsInfo');
+
+            if (totalResults > 0) {
+                resultsInfo.textContent = `${start}-${end} of ${totalResults} Results`;
+            } else {
+                resultsInfo.textContent = "No Results";
+            }
+            resultsInfo.style.display = 'block';
+        }
+
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (offset > 0) {
+                offset--;
+                displayData();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', function() {
+            if ((offset + 1) * limit < allData.length) {
+                offset++;
+                displayData();
+            }
+        });
+
+        document.getElementById('resultsPerPage').addEventListener('change', function() {
+            limit = parseInt(this.value);
+            offset = 0; // Reset to first page
+            displayData();
+        });
+
+function sortTable(n, tableId, type) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    dir = "asc";
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (type === 'text') {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (Number(x.innerHTML.replace(/[^0-9.-]+/g,"")) > Number(y.innerHTML.replace(/[^0-9.-]+/g,""))) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            } else if (dir == "desc") {
+                if (type === 'text') {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (Number(x.innerHTML.replace(/[^0-9.-]+/g,"")) < Number(y.innerHTML.replace(/[^0-9.-]+/g,""))) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+
+</script>
+</body>
+</html>

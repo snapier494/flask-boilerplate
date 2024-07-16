@@ -1,0 +1,253 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+    background-color: #f0f0f0;
+    color: #202124;
+}
+
+/* Container */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form */
+form {
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%; /* Set width to 100% */
+    overflow-x: auto; /* Add horizontal scrollbar if needed */
+}
+
+/* Labels */
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+input[type="text"], input[type="number"], .form-check-input {
+    width: 20%;  /* Full width within grid cell */
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus Styles */
+input[type="text"]:focus, input[type="number"]:focus, .form-check-input:focus {
+    border-color: #6200ea;
+    box-shadow: 0 0 8px rgba(98, 0, 234, 0.1);
+}
+
+/* Checkbox */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    grid-column: span 2;  /* Make the checkbox full width */
+}
+
+.form-check-input {
+    width: auto;  /* Make the checkbox itself smaller */
+    margin-right: 10px;
+}
+
+/* Button */
+button {
+    width: 20%;  /* Full width within grid cell lowered to 20 */
+    padding: 12px;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    grid-column: span 2;  /* Make the button full width */
+}
+
+button:hover {
+    background-color: #3700b3;
+    box-shadow: 0 4px 8px rgba(98, 0, 234, 0.2);
+}
+
+/* Table */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    font-size: 0.8em; /* Adjust as needed */
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+th {
+    background-color: #6200ea;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pagination button {
+    box-sizing: border-box;
+    font-size: .95em; /* Adjust as needed */
+    padding: .2px .2px; /* Adjust as needed */
+    border: 1px solid #ccc; /* Adjust as needed */
+    background-color: #6200ea; /* Adjust as needed */
+    cursor: pointer;
+}
+
+#resultsInfo {
+    display: none;
+}
+
+#resultsInfoAndButton {
+    display: flex;
+    align-items: center;
+}
+
+#resultsInfoAndButton > * {
+    margin-right: 10px;
+}
+.header-button {
+    box-sizing: border-box;
+    padding: 10px !important;
+    border: none !important;
+    background-color: blue !important;
+    color: white !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.header-button:hover {
+    background-color: darkblue !important;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #242d60;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Helvetica Neue', 'Ubuntu', sans-serif;
+    height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  section {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 112px;
+    border-radius: 6px;
+    justify-content: space-between;
+    margin: 10px;
+  }
+  .product {
+    display: flex;
+  }
+  .description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.154px;
+    color: #242d60;
+    height: 100%;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  svg {
+    border-radius: 6px;
+    margin: 10px;
+    width: 54px;
+    height: 57px;
+  }
+  h3,
+  h5 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.154px;
+    color: #242d60;
+    margin: 0;
+  }
+  h5 {
+    opacity: 0.5;
+  }
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  #checkout-and-portal-button {
+    height: 36px;
+    background: #556cd6;
+    color: white;
+    width: 100%;
+    font-size: 14px;
+    border: 0;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.6;
+    border-radius: 0 0 6px 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+  }
+  #checkout-and-portal-button:hover {
+    opacity: 0.8;
+  }
