@@ -15,10 +15,13 @@ def register():
             username = request.form.get('username')
             password = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             email = request.form.get('email')
-
+            print('username = ', username)
+            print('password = ', password)
+            print('email = ', email)
             conn = get_db_connection()
+            print('conn = ', conn);
             cur = conn.cursor()
-            cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", (username, password, email))
+            cur.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
             conn.commit()
             
             # Retrieve the id of the user based on their email
@@ -33,5 +36,5 @@ def register():
         
         except Exception as e:
             conn.rollback()
-            return jsonify({'error': 'An error occurred during registration'}), 500
+            return jsonify({'error': 'An error occurred during registration' + e}), 500
     return render_template('register.html')

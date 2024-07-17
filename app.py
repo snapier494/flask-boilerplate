@@ -12,8 +12,9 @@ from dotenv import load_dotenv
 import datetime
 from datetime import datetime
 from config import Config
-from models import db, User
+from models import db, User, create_tables
 from auth import route_auth
+from feature.db import get_db_connection
 
 load_dotenv()
 
@@ -30,8 +31,8 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()  # This will create the tables if they don't exist
+# with app.app_context():
+create_tables()
 
 login_manager.login_view = 'login'
 
@@ -41,20 +42,6 @@ def decimal_default(obj):
     if isinstance(obj, Decimal):
         return float(obj)
     raise TypeError
-
-
-def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD")
-    )
-    return conn
-
-with app.app_context():
-    # Create tables if they don't exist
-    db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -76,67 +63,9 @@ def signup():
         return create_checkout_session()
     else:
         return render_template('register.html')
-
-# @app.route('/register', methods=['GET', 'POST'])
-# def register():
-#     if request.method == 'POST':
-#         try:
-#             username = request.form.get('username')
-#             password = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-#             email = request.form.get('email')
-#             print(email)
-
-#             conn = get_db_connection()
-#             cur = conn.cursor()
-#             cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", (username, password, email))
-#             conn.commit()
-            
-#             # Retrieve the id of the user based on their email
-#             cur.execute("SELECT id FROM users WHERE email = %s", (email,))
-#             user_id = cur.fetchone()[0]
-
-#             # Automatically log in the user
-#             user = User(user_id, username, password, email)  # Replace with your User model
-#             print(user)
-#             login_user(user)
-
-#             # Redirect to the create-checkout-session route
-#             return create_checkout_session()
-        
-#         except Exception as e:
-#             # Rollback the transaction in case of error
-#             conn.rollback()
-#             # Log the error for debugging
-#             print(str(e))
-#             # Return a response with a 500 Internal Server Error status code
-#             return jsonify({'error': 'An error occurred during registration'}), 500
-#     return render_template('register.html')
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         password = request.form.get('password').encode('utf-8')
-#         conn = get_db_connection()
-#         cur = conn.cursor()
-#         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-#         user = cur.fetchone()
-#         if user and bcrypt.checkpw(password, user[2].encode('utf-8')):
-#             login_user(User(user[0], user[1], user[2],user[3]))
-#             return redirect(url_for('index'))
-#         else:
-#             return 'Invalid username or password'
-#     return render_template('login.html')
-
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     #I can change this to the index route instead
-#     logout_user()
-#     return redirect(url_for('index'))
-
+    
 # Register the authentication blueprints
-# route_auth(app)
+route_auth(app)
 
 @app.route('/manage')
 @login_required
@@ -509,6 +438,5 @@ def cancel():
 def success():
     return render_template('success.html')
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
