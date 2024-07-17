@@ -357,12 +357,15 @@
                           <!-- price -->
                           <div class="d-flex align-items-end mt-6 mb-3">
                             <h1 class="me-1 mb-0" id="price1">$20</h1>
-                    		<p class="mb-0" id="priceUnit">/mo</p>
+                    		<p class="mb-0" id="priceUnit1">/mo</p>
                           </div>
                           <!-- button -->
-                          <a href="#!" class="btn btn-outline-primary"
-                            >Buy Standard</a
-                          >
+						  <form action="/sign-up" method="POST">
+							<input type="hidden" name="lookup_key" value="price_1PM9OJGrYum9FiR6X4Prc0Em" />
+							<button href="#!" class="btn btn-outline-primary"
+								>Get Started</button
+							>
+						  </form>
                         </div>
                         <!-- card body -->
                         <div class="card-body">
@@ -440,10 +443,10 @@
                             making.
                           </p>
                           <div class="d-flex align-items-end mt-6 mb-3">
-                            <h1 class="me-1 mb-0" id="price2">$20</h1>
-                    		<p class="mb-0" id="priceUnit">/mo</p>
+                            <h1 class="me-1 mb-0" id="price2">$50</h1>
+                    		<p class="mb-0" id="priceUnit2">/mo</p>
                           </div>
-                          <a href="#!" class="btn btn-primary">Buy Multisite</a>
+                          <a href="#!" class="btn btn-primary">Get Started</a>
                         </div>
                         <!-- card body -->
                         <div class="card-body">
@@ -511,10 +514,10 @@
                           <!-- price -->
                           <div class="d-flex align-items-end mt-6 mb-3">
                             <h1 class="me-1 mb-0" id="price3">$70</h1>
-                    		<p class="mb-0" id="priceUnit">/mo</p>
+                    		<p class="mb-0" id="priceUnit3">/mo</p>
                           </div>
                           <a href="#!" class="btn btn-outline-primary"
-                            >Buy Extended</a
+                            >Get Started</a
                           >
                         </div>
                         <!-- card body -->
@@ -590,17 +593,24 @@
 			var priceElement1 = document.getElementById("price1");
 			var priceElement2 = document.getElementById("price2");
 			var priceElement3 = document.getElementById("price3");
-			var priceUnitElement = document.getElementById("priceUnit");
-			if (priceUnitElement.innerText === "/mo") {
+			var priceUnitElement1 = document.getElementById("priceUnit1");
+			var priceUnitElement2 = document.getElementById("priceUnit2");
+			var priceUnitElement3 = document.getElementById("priceUnit3");
+
+			if (priceUnitElement1.innerText === "/mo") {
 				priceElement1.innerText = "$200";
 				priceElement2.innerText = "$500";
 				priceElement3.innerText = "$700";
-				priceUnitElement.innerText = "/yr";
+				priceUnitElement1.innerText = "/yr";
+				priceUnitElement2.innerText = "/yr";
+				priceUnitElement3.innerText = "/yr";
 			} else {
 				priceElement1.innerText = "$20";
 				priceElement2.innerText = "$50";
 				priceElement3.innerText = "$70";
-				priceUnitElement.innerText = "/mo";
+				priceUnitElement1.innerText = "/mo";
+				priceUnitElement2.innerText = "/mo";
+				priceUnitElement3.innerText = "/mo";
 			}
 		}
 	
