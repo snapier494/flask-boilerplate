@@ -7,14 +7,14 @@ import os
 import stripe
 from html import escape
 from decimal import Decimal
-from werkzeug.security import check_password_hash
 from dotenv import load_dotenv
 import datetime
 from datetime import datetime
 from config import Config
-from models import db, User, create_tables
+from models import db, User
 from auth import route_auth
 from feature.db import get_db_connection
+from feature.createTable import create_tables
 
 load_dotenv()
 
@@ -47,10 +47,10 @@ def decimal_default(obj):
 def load_user(user_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    cur.execute("SELECT * FROM users WHERE uuid = %s", (user_id,))
     user = cur.fetchone()
     if user:
-        return User(user[0], user[1], user[2], user[3])
+        return User(user[0], user[1], user[2], user[3], user[4])
 
 
 @app.route('/sign-up', methods=['POST'])
@@ -107,34 +107,35 @@ def manage_subscription():
 @app.route('/')
 def index():
     # If user is not logged in, display landing.html template
+    print('current_user authenticated = ', current_user.is_authenticated);
     if not current_user.is_authenticated:
         return render_template('landing.html')
 
     # Retrieve the email from the logged-in user
     user_email = current_user.email
-
+    return render_template('index.html')
     # Query the database to get the customer_id and end_date
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT customer_id, end_date FROM users WHERE email = %s", (user_email,))
-    result = cur.fetchone()
-    customer_id = result[0]
-    end_date = result[1]
+    # conn = get_db_connection()
+    # cur = conn.cursor()
+    # cur.execute("SELECT customer_id, end_date FROM users WHERE email = %s", (user_email,))
+    # result = cur.fetchone()
+    # customer_id = result[0]
+    # end_date = result[1]
 
-    #print(f"end_date: {end_date}")
-    #print(f"datetime.now(): {datetime.now()}")
-    #print(f"end_date > datetime.now(): {end_date > datetime.now()}")
-    # If customer_id is null, redirect to create-checkout-session route
-    if customer_id is None:
-        return render_template('landing.html')
+    # #print(f"end_date: {end_date}")
+    # #print(f"datetime.now(): {datetime.now()}")
+    # #print(f"end_date > datetime.now(): {end_date > datetime.now()}")
+    # # If customer_id is null, redirect to create-checkout-session route
+    # if customer_id is None:
+    #     return render_template('landing.html')
 
-    # If customer_id is not null and end_date is in the future, render index.html
-    elif end_date > datetime.now():
-        return render_template('index.html')
+    # # If customer_id is not null and end_date is in the future, render index.html
+    # elif end_date > datetime.now():
+    #     return render_template('index.html')
 
-    # If customer_id is not null and end_date is in the past, redirect to manage subscription
-    else:
-        return redirect(url_for('manage_subscription'))
+    # # If customer_id is not null and end_date is in the past, redirect to manage subscription
+    # else:
+    #     return redirect(url_for('manage_subscription'))
 
 @app.route('/filtered-data', methods=['POST'])
 def get_filtered_data():
