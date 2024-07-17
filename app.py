@@ -13,8 +13,8 @@ from datetime import datetime
 from config import Config
 from models import db, User
 from auth import route_auth
-from feature.db import get_db_connection
-from feature.createTable import create_tables
+from features.db import get_db_connection
+from features.createTable import create_tables
 
 load_dotenv()
 

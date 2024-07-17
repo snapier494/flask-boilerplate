@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template, jsonify, redirect, url_for
 import bcrypt
 from flask_login import login_user
-from feature.db import get_db_connection
+from features.db import get_db_connection
 from models import User 
 from checkout_session import create_checkout_session  # Adjust import as necessary
 
