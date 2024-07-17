@@ -62,7 +62,7 @@ def signup():
     if current_user.is_authenticated:
         return create_checkout_session()
     else:
-        return render_template('register.html')
+        return render_template('pages/register.html')
     
 # Register the authentication blueprints
 route_auth(app)
@@ -102,18 +102,18 @@ def manage_subscription():
         cancel_date = datetime.fromtimestamp(subscription['cancel_at'])
 
     # Pass the subscription details to the template
-    return render_template('manage.html', subscription=subscription, start_date=start_date, end_date=end_date, cancel_date=cancel_date, plan_product_id=plan_product_id, plan_amount=plan_amount, plan_product_name=plan_product_name)
+    return render_template('pages/manage.html', subscription=subscription, start_date=start_date, end_date=end_date, cancel_date=cancel_date, plan_product_id=plan_product_id, plan_amount=plan_amount, plan_product_name=plan_product_name)
 
 @app.route('/')
 def index():
     # If user is not logged in, display landing.html template
     print('current_user authenticated = ', current_user.is_authenticated);
     if not current_user.is_authenticated:
-        return render_template('landing.html')
+        return render_template('pages/landing.html')
 
     # Retrieve the email from the logged-in user
     user_email = current_user.email
-    return render_template('index.html')
+    return render_template('pages/index.html')
     # Query the database to get the customer_id and end_date
     # conn = get_db_connection()
     # cur = conn.cursor()
@@ -428,16 +428,16 @@ def update_subscription(customer_id, subscription_id, current_period_start, curr
 @app.route('/checkout')
 def checkout():
     #this changes to the landing page
-    return render_template('checkout.html')
+    return render_template('pages/checkout.html')
 
 @app.route('/cancel')
 def cancel():
-    return render_template('cancel.html')
+    return render_template('pages/cancel.html')
 
 @app.route('/success')
 #this changes to onboarding page
 def success():
-    return render_template('success.html')
+    return render_template('pages/success.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

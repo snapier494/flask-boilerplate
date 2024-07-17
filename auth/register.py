@@ -26,7 +26,7 @@ def register():
                 conn.commit()
             else:
                 error_message = "This email is already registered."  # Set the error message
-                return render_template('register.html', error_message=error_message)
+                return render_template('pages/register.html', error_message=error_message)
 
             
             # Retrieve the id of the user based on their email
@@ -45,4 +45,4 @@ def register():
         except Exception as e:
             conn.rollback()
             return jsonify({'error': 'An error occurred during registration' + e}), 500
-    return render_template('register.html')
+    return render_template('pages/register.html')
