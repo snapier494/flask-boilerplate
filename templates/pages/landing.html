@@ -60,7 +60,7 @@
         <!-- navbar -->
         <div class="navbar-custom navbar navbar-expand-lg">
           <div class="container-fluid px-0">
-            <a class="navbar-brand d-block d-md-none" href="../index.html">
+            <a class="navbar-brand d-block d-md-none" href="/">
               <img src="../assets/images/brand/logo/logo-2.svg" alt="Image" />
             </a>
 
@@ -172,6 +172,7 @@
               </li>
 
               <!-- List -->
+              {% if current_user.is_authenticated %}
               <li class="dropdown ms-2">
                 <a
                   class="rounded-circle"
@@ -196,7 +197,7 @@
                 >
                   <div class="px-4 pb-0 pt-2">
                     <div class="lh-1">
-                      <h5 class="mb-1">John E. Grainger</h5>
+                      <h5 class="mb-1">{{ current_user.username }}</h5>
                       <a href="#!" class="text-inherit fs-6">View my profile</a>
                     </div>
                     <div class="dropdown-divider mt-3 mb-2"></div>
@@ -238,7 +239,7 @@
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="../index.html">
+                      <a class="dropdown-item" href="/logout">
                         <i
                           class="me-2 icon-xxs dropdown-item-icon"
                           data-feather="power"
@@ -249,6 +250,7 @@
                   </ul>
                 </div>
               </li>
+              {% endif %}
             </ul>
           </div>
         </div>
@@ -259,7 +261,7 @@
       <div class="navbar-vertical navbar nav-dashboard">
         <div class="h-100" data-simplebar>
           <!-- Brand logo -->
-          <a class="navbar-brand" href="../index.html">
+          <a class="navbar-brand" href="/">
             <img
               src="../assets/images/brand/logo/logo-2.svg"
               alt="dash ui - bootstrap 5 admin dashboard template"
@@ -268,6 +270,7 @@
           <!-- Navbar nav -->
           <ul class="navbar-nav flex-column" id="sideNavbar">
             <!-- Nav item -->
+            {% if not current_user.is_authenticated %}
             <li class="nav-item">
               <a
                 class="nav-link has-arrow collapsed"
@@ -295,6 +298,7 @@
                 </ul>
               </div>
             </li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -328,13 +332,15 @@
                     </div>
 
                     <!-- Checked switch -->
-                    <div class="col-md-12 col-12 mb-2 form-check form-switch">
+                    <div
+                      class="col-md-12 col-12 mb-2 form-check form-switch d-flex justify-content-center"
+                    >
                       <input
                         class="form-check-input"
                         type="checkbox"
                         role="switch"
-                        id="priceToggle" 
-						onchange="togglePrice()"
+                        id="priceToggle"
+                        onchange="togglePrice()"
                       />
                       <label
                         class="form-check-label"
@@ -357,15 +363,19 @@
                           <!-- price -->
                           <div class="d-flex align-items-end mt-6 mb-3">
                             <h1 class="me-1 mb-0" id="price1">$20</h1>
-                    		<p class="mb-0" id="priceUnit1">/mo</p>
+                            <p class="mb-0" id="priceUnit1">/mo</p>
                           </div>
                           <!-- button -->
-						  <form action="/sign-up" method="POST">
-							<input type="hidden" name="lookup_key" value="price_1PM9OJGrYum9FiR6X4Prc0Em" />
-							<button href="#!" class="btn btn-outline-primary"
-								>Get Started</button
-							>
-						  </form>
+                          <form action="/sign-up" method="POST">
+                            <input
+                              type="hidden"
+                              name="lookup_key"
+                              value="price_1PM9OJGrYum9FiR6X4Prc0Em"
+                            />
+                            <button href="#!" class="btn btn-outline-primary">
+                              Get Started
+                            </button>
+                          </form>
                         </div>
                         <!-- card body -->
                         <div class="card-body">
@@ -444,7 +454,7 @@
                           </p>
                           <div class="d-flex align-items-end mt-6 mb-3">
                             <h1 class="me-1 mb-0" id="price2">$50</h1>
-                    		<p class="mb-0" id="priceUnit2">/mo</p>
+                            <p class="mb-0" id="priceUnit2">/mo</p>
                           </div>
                           <a href="#!" class="btn btn-primary">Get Started</a>
                         </div>
@@ -514,7 +524,7 @@
                           <!-- price -->
                           <div class="d-flex align-items-end mt-6 mb-3">
                             <h1 class="me-1 mb-0" id="price3">$70</h1>
-                    		<p class="mb-0" id="priceUnit3">/mo</p>
+                            <p class="mb-0" id="priceUnit3">/mo</p>
                           </div>
                           <a href="#!" class="btn btn-outline-primary"
                             >Get Started</a
@@ -588,34 +598,34 @@
     <script src="../assets/libs/feather-icons/dist/feather.min.js"></script>
     <script src="../assets/libs/simplebar/dist/simplebar.min.js"></script>
 
-	<script>
-		function togglePrice() {
-			var priceElement1 = document.getElementById("price1");
-			var priceElement2 = document.getElementById("price2");
-			var priceElement3 = document.getElementById("price3");
-			var priceUnitElement1 = document.getElementById("priceUnit1");
-			var priceUnitElement2 = document.getElementById("priceUnit2");
-			var priceUnitElement3 = document.getElementById("priceUnit3");
+    <script>
+      function togglePrice() {
+        var priceElement1 = document.getElementById("price1");
+        var priceElement2 = document.getElementById("price2");
+        var priceElement3 = document.getElementById("price3");
+        var priceUnitElement1 = document.getElementById("priceUnit1");
+        var priceUnitElement2 = document.getElementById("priceUnit2");
+        var priceUnitElement3 = document.getElementById("priceUnit3");
 
-			if (priceUnitElement1.innerText === "/mo") {
-				priceElement1.innerText = "$200";
-				priceElement2.innerText = "$500";
-				priceElement3.innerText = "$700";
-				priceUnitElement1.innerText = "/yr";
-				priceUnitElement2.innerText = "/yr";
-				priceUnitElement3.innerText = "/yr";
-			} else {
-				priceElement1.innerText = "$20";
-				priceElement2.innerText = "$50";
-				priceElement3.innerText = "$70";
-				priceUnitElement1.innerText = "/mo";
-				priceUnitElement2.innerText = "/mo";
-				priceUnitElement3.innerText = "/mo";
-			}
-		}
-	
-		feather.replace();
-	</script>
+        if (priceUnitElement1.innerText === "/mo") {
+          priceElement1.innerText = "$200";
+          priceElement2.innerText = "$500";
+          priceElement3.innerText = "$700";
+          priceUnitElement1.innerText = "/yr";
+          priceUnitElement2.innerText = "/yr";
+          priceUnitElement3.innerText = "/yr";
+        } else {
+          priceElement1.innerText = "$20";
+          priceElement2.innerText = "$50";
+          priceElement3.innerText = "$70";
+          priceUnitElement1.innerText = "/mo";
+          priceUnitElement2.innerText = "/mo";
+          priceUnitElement3.innerText = "/mo";
+        }
+      }
+
+      feather.replace();
+    </script>
 
     <!-- Theme JS -->
     <script src="../assets/js/theme.min.js"></script>
