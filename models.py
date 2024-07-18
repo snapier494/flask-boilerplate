@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 import uuid
-from features.db import get_db_connection
 from sqlalchemy.dialects.postgresql import ENUM
 from datetime import datetime
 

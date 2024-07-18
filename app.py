@@ -1,11 +1,7 @@
-from flask import Flask, jsonify, request, send_from_directory, render_template, redirect, url_for, json, redirect, current_app, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import bcrypt
-import psycopg2
+from flask import Flask, jsonify, request, render_template, redirect, url_for, json, redirect, session
+from flask_login import LoginManager, login_required, current_user
 import os
 import stripe
-from html import escape
 from decimal import Decimal
 from dotenv import load_dotenv
 import datetime
@@ -13,8 +9,8 @@ from datetime import datetime
 from config import Config
 from models import db, User
 from auth import route_auth
-from features.db import get_db_connection
-from features.createTable import create_tables
+from db.connectDB import get_db_connection
+from db.createTable import create_tables
 
 load_dotenv()
 
@@ -114,30 +110,30 @@ def index():
     # Retrieve the email from the logged-in user
     print('go to index.html');
     user_email = current_user.email
-    print('userEmail = ', user_email);
-    return render_template('pages/landing.html')
+    user_id = current_user.uuid
+    print('user_id = ', user_id);
     # Query the database to get the customer_id and end_date
-    # conn = get_db_connection()
-    # cur = conn.cursor()
-    # cur.execute("SELECT customer_id, end_date FROM users WHERE email = %s", (user_email,))
-    # result = cur.fetchone()
-    # customer_id = result[0]
-    # end_date = result[1]
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM subscriptions WHERE user_id = %s", (user_email,))
+    result = cur.fetchone()
+    print('result = ', result)
+    if not result:
+        return render_template('pages/landing.html')
+    else: 
+        customer_id = result[0]
+        end_date = result[1]
 
-    # #print(f"end_date: {end_date}")
-    # #print(f"datetime.now(): {datetime.now()}")
-    # #print(f"end_date > datetime.now(): {end_date > datetime.now()}")
-    # # If customer_id is null, redirect to create-checkout-session route
-    # if customer_id is None:
-    #     return render_template('landing.html')
+        if customer_id is None:
+            return render_template('pages/landing.html')
 
-    # # If customer_id is not null and end_date is in the future, render index.html
-    # elif end_date > datetime.now():
-    #     return render_template('index.html')
+        # If customer_id is not null and end_date is in the future, render index.html
+        elif end_date > datetime.now():
+            return render_template('pages/index.html')
 
-    # # If customer_id is not null and end_date is in the past, redirect to manage subscription
-    # else:
-    #     return redirect(url_for('manage_subscription'))
+        # If customer_id is not null and end_date is in the past, redirect to manage subscription
+        else:
+            return redirect(url_for('manage_subscription'))
 
 @app.route('/filtered-data', methods=['POST'])
 def get_filtered_data():

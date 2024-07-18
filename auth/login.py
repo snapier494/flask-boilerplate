@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask_login import login_user
 import bcrypt
-from features.db import get_db_connection  # Adjust import as necessary
+from db.connectDB import get_db_connection  # Adjust import as necessary
 from models import User  # Adjust import as necessary
 
 login_bp = Blueprint('login', __name__)
