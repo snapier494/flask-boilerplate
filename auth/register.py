@@ -4,7 +4,7 @@ import bcrypt
 from flask_login import login_user
 from db.connectDB import get_db_connection
 from models import User 
-from checkout_session import create_checkout_session  # Adjust import as necessary
+from checkout.routes import create_checkout_session  # Adjust import as necessary
 
 register_bp = Blueprint('register', __name__)
 

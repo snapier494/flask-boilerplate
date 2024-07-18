@@ -27,14 +27,18 @@ def create_tables():
     """
     
     create_subscriptions_table_query = """
-    CREATE TABLE IF NOT EXISTS subscriptions (
+        CREATE TABLE IF NOT EXISTS subscriptions (
         uuid UUID DEFAULT gen_random_uuid() PRIMARY KEY,
         user_id VARCHAR(50) NOT NULL,
-        customer_id VARCHAR(100) NOT NULL,
-        price_id VARCHAR(255) NOT NULL,
-        status VARCHAR(255) NOT NULL,
-        start_date TIMESTAMP NOT NULL,
-        end_date TIMESTAMP NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        customer_id VARCHAR(100),
+        subscription_id VARCHAR(100),
+        price_id VARCHAR(255),
+        start_date TIMESTAMP,
+        end_date TIMESTAMP,
+        product VARCHAR(255),
+        name VARCHAR(255),
+        status VARCHAR(255),
         created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
