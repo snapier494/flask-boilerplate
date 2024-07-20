@@ -81,14 +81,14 @@ def index():
     # Query the database to get the customer_id and end_date
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM subscriptions WHERE user_id = %s", (user_email,))
+    cur.execute("SELECT * FROM subscriptions WHERE user_id = %s", (user_id,))
     result = cur.fetchone()
     print('result = ', result)
     if not result:
         return render_template('pages/landing.html')
     else: 
         customer_id = result[0]
-        end_date = result[1]
+        end_date = result[7]  # Assuming this is a string in the correct format
 
         if customer_id is None:
             return render_template('pages/landing.html')

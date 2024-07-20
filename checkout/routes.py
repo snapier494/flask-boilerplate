@@ -25,7 +25,7 @@ def manage_subscription():
     # Query the database to get the subscription_id
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT subscription_id FROM users WHERE email = %s", (user_email,))
+    cur.execute("SELECT subscription_id FROM subscriptions WHERE email = %s", (user_email,))
     subscription_id = cur.fetchone()[0]
     conn.close()
 
@@ -87,7 +87,7 @@ def customer_portal():
     # Query the database to get the customer_id
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT customer_id FROM users WHERE email = %s", (user_email,))
+    cur.execute("SELECT customer_id FROM subscriptions WHERE email = %s", (user_email,))
     customer_id = cur.fetchone()[0]
     conn.close()
 
