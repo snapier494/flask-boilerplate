@@ -9,6 +9,7 @@ from config import Config
 from models import db, User
 from auth import route_auth
 from checkout import route_checkout
+from terms import route_terms
 from db.connectDB import get_db_connection
 from db.createTable import create_tables
 from checkout.routes import create_checkout_session
@@ -51,14 +52,14 @@ def load_user(user_id):
 
 
 @app.route('/sign-up', methods=['POST'])
-def signup():
+def sign_up():
     lookup_key = request.form.get('lookup_key')
     if lookup_key:
         session['lookup_key'] = lookup_key
     if current_user.is_authenticated:
         return create_checkout_session()
     else:
-        return render_template('pages/register.html')
+        return render_template('pages/sign-up.html')
  
 # Register the authentication blueprints
 route_auth(app)
@@ -191,6 +192,8 @@ def get_filtered_data():
     result = [{k: decimal_default(v) if isinstance(v, Decimal) else v for k, v in row.items()} for row in result]
     print(result)
     return jsonify(result)
+
+route_terms(app)
 
 if __name__ == "__main__":
     app.run(debug=True)

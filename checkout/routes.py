@@ -1,5 +1,5 @@
 # checkout_session/routes.py
-from flask import Blueprint, redirect, request, render_template, jsonify, json
+from flask import Blueprint, redirect, request, render_template, jsonify, json, session
 from flask_login import current_user, login_required
 import stripe
 from db.connectDB import get_db_connection
@@ -56,12 +56,16 @@ def manage_subscription():
 
 @create_checkout_session_bp.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+    lookup_key = ''
+    if not request.form.get('lookup_key'):
+        lookup_key = session['lookup_key']
+    else: lookup_key = request.form.get('lookup_key')
     try:
         prices = stripe.Price.list(
-            lookup_keys=[request.form.get('lookup_key')],
+            lookup_keys=[lookup_key],
             expand=['data.product']
         )
-
+        print('prices = ', prices)
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {

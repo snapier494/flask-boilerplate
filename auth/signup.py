@@ -1,15 +1,15 @@
 # auth/register.py
-from flask import Blueprint, request, render_template, jsonify, redirect, url_for
+from flask import Blueprint, request, render_template, jsonify, session
 import bcrypt
 from flask_login import login_user
 from db.connectDB import get_db_connection
 from models import User 
-from checkout.routes import create_checkout_session  # Adjust import as necessary
+from checkout.routes import create_checkout_session
 
-register_bp = Blueprint('register', __name__)
+signup_bp = Blueprint('signup', __name__)
 
-@register_bp.route('/register', methods=['GET', 'POST'])
-def register():
+@signup_bp.route('/signup', methods=['GET', 'POST'])
+def signup():
     if request.method == 'POST':
         try:
             username = request.form.get('username')
@@ -26,7 +26,7 @@ def register():
                 conn.commit()
             else:
                 error_message = "This email is already registered."  # Set the error message
-                return render_template('pages/register.html', error_message=error_message)
+                return render_template('pages/signup.html', error_message=error_message)
 
             
             # Retrieve the id of the user based on their email
@@ -42,9 +42,11 @@ def register():
             
             print('user = ', user);
             # return create_checkout_session()
-            return redirect(url_for('index'))
+            print('session = ', session['lookup_key']);
+            return create_checkout_session()
         
         except Exception as e:
             conn.rollback()
-            return jsonify({'error': 'An error occurred during registration' + e}), 500
-    return render_template('pages/register.html')
+            return render_template('pages/sign-up.html')
+            # return jsonify({'error': 'An error occurred during registration' + e}), 500
+    return render_template('pages/sign-up.html')
