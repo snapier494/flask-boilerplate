@@ -18,8 +18,6 @@ load_dotenv()
 # This is your test secret API key.
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 
-print('stripe.api_key = ', stripe.api_key)
-
 app = Flask(__name__,
     static_url_path='',
     static_folder='static')
