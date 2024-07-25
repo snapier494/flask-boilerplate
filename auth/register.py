@@ -42,7 +42,7 @@ def register():
             
             print('user = ', user);
             # return create_checkout_session()
-            return redirect(url_for('index'))
+            return redirect(url_for('index.index'))
         
         except Exception as e:
             conn.rollback()

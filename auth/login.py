@@ -20,7 +20,7 @@ def login():
         user = cur.fetchone()
         if user and bcrypt.checkpw(password, user[3].encode('utf-8')):
             login_user(User(user[0], user[1], user[2], user[3], user[4]))
-            return redirect(url_for('index'))
+            return redirect(url_for('index.index'))
         else:
             return 'Invalid username or password'
     return render_template('pages/login.html')
