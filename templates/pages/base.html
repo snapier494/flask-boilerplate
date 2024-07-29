@@ -55,7 +55,7 @@
   </head>
 
   <body>
-    <main id="main-wrapper" class="main-wrapper">
+    <main id="main-wrapper" class="main-wrapper {% if not current_user.is_authenticated %}toggled{% endif %}">
       <div class="header">
         <!-- navbar -->
         <div class="navbar-custom navbar navbar-expand-lg">
@@ -232,7 +232,9 @@
       <!-- navbar vertical -->
 
       <!-- Sidebar -->
+      {% if current_user.is_authenticated %}
       {%include 'pages/components/navbar.html'%}
+      {% endif %}
 
       <!-- page content -->
       <div id="app-content">
