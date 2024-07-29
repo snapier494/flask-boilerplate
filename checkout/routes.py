@@ -1,6 +1,7 @@
 # checkout_session/routes.py
 from flask import Blueprint, redirect, request, render_template, jsonify, json, session
 from flask_login import current_user, login_required
+import os
 import stripe
 from db.connectDB import get_db_connection
 from datetime import datetime
@@ -14,7 +15,7 @@ cancel_bp = Blueprint('cancel', __name__)
 success_bp = Blueprint('success', __name__)
 manage_subscription_bp = Blueprint('manage_subscription', __name__)
 
-YOUR_DOMAIN = "http://localhost:5000"  # Replace with your actual domain
+YOUR_DOMAIN = os.getenv('YOUR_DOMAIN')  # Replace with your actual domain
 
 
 @manage_subscription_bp.route('/manage')

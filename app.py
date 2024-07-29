@@ -10,6 +10,7 @@ from checkout import route_checkout
 from terms import route_terms
 from index import route_index
 from filtered_data import route_filtered_data
+from common import route_common
 from db.connectDB import get_db_connection
 from db.createTable import create_tables
 
@@ -31,9 +32,9 @@ db.init_app(app)
 # with app.app_context():
 create_tables()
 
-login_manager.login_view = 'login'
+login_manager.login_view = '/login'
 
-YOUR_DOMAIN = 'http://127.0.0.1:5000'
+YOUR_DOMAIN = os.getenv('YOUR_DOMAIN')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -50,6 +51,7 @@ route_checkout(app)
 route_index(app)
 route_filtered_data(app)
 route_terms(app)
+route_common(app)
 
 if __name__ == "__main__":
     app.run(debug=True)

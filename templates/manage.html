@@ -1,0 +1,24 @@
+<body>
+    <h2>Subscription Details</h2>
+
+    <p>Plan: {{ plan_product_name }}</p>
+    <p>Price: {{ plan_amount / 100 }}</p>
+    <p>Billing Start: {{ start_date }}</p>
+    <p>Billing End: {{ end_date }}</p>
+    <p>Status: {{ subscription.status }}</p>
+    {% if cancel_date %}
+        <p>Cancels on: {{ cancel_date }}</p>
+    {% endif %}
+
+    {% if subscription.status == 'active' %}
+        <form action="/create-portal-session" method="POST">
+            <button type="submit">Manage Subscription</button>
+        </form>
+    {% else %}
+        <p>Your plan has expired. Please manage your subscription to pick a new plan.</p>
+        <form action="/create-portal-session" method="POST">
+            <button type="submit">Manage Subscription</button>
+        </form>
+    {% endif %}
+</body>
+</html>
