@@ -22,5 +22,6 @@ def login():
             login_user(User(user[0], user[1], user[2], user[3], user[4]))
             return redirect(url_for('index.index'))
         else:
-            return 'Invalid username or password'
+            error_message = "Email and Password is invalid."  # Set the error message
+            return render_template('pages/login.html', error_message=error_message)
     return render_template('pages/login.html')

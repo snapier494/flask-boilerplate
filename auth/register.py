@@ -25,7 +25,7 @@ def register():
                 cur.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
                 conn.commit()
             else:
-                error_message = "This email is already registered."  # Set the error message
+                error_message = "Email already exist."  # Set the error message
                 return render_template('pages/register.html', error_message=error_message)
 
             

@@ -123,6 +123,12 @@
                     alt="Image"
                 /></a>
                 <p class="mb-6">Please enter your user information.</p>
+                {% if error_message %}
+                    <error class="error-message" style="color: red;">
+                        {{ error_message }}
+                    </error>
+                    <br>
+                    {% endif %}
               </div>
               <!-- Form -->
               <form action="/login" method="post">
