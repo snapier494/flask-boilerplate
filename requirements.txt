@@ -5,6 +5,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 Flask==3.0.3
 Flask-Login==0.6.3
+Flask-Mail==0.10.0
 Flask-SQLAlchemy==3.1.1
 greenlet==3.0.3
 idna==3.7
@@ -13,8 +14,11 @@ Jinja2==3.1.4
 MarkupSafe==2.1.5
 psycopg2==2.9.9
 python-dotenv==1.0.1
+python-http-client==3.3.7
 requests==2.32.3
+sendgrid==6.11.0
 SQLAlchemy==2.0.31
+starkbank-ecdsa==2.2.0
 stripe==10.3.0
 typing_extensions==4.12.2
 urllib3==2.2.2

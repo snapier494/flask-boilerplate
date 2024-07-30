@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify, render_template
 from flask_login import LoginManager
 import os
 import stripe
@@ -24,7 +24,6 @@ app = Flask(__name__,
     static_folder='static')
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config.from_object(Config)
 
 db.init_app(app)
@@ -52,6 +51,7 @@ route_index(app)
 route_filtered_data(app)
 route_terms(app)
 route_common(app)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
