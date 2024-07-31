@@ -19,7 +19,8 @@ def login():
         cur.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
         if user and bcrypt.checkpw(password, user[3].encode('utf-8')):
-            login_user(User(user[0], user[1], user[2], user[3], user[4]))
+            user = User(uuid=user[0], username=user[1], email=user[2], password=user[3], status=user[4])  # Replace with your User model
+            login_user(user)
             return redirect(url_for('index.index'))
         else:
             error_message = "Email and Password is invalid."  # Set the error message

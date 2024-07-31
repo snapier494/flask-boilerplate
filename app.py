@@ -24,6 +24,7 @@ app = Flask(__name__,
     static_folder='static')
 login_manager = LoginManager()
 login_manager.init_app(app)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config.from_object(Config)
 
 db.init_app(app)
