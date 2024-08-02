@@ -48,6 +48,8 @@
       rel="stylesheet"
     />
 
+    <link rel="stylesheet" href="style.css">
+
     <!-- Theme CSS -->
     <link rel="stylesheet" href="../assets/css/theme.min.css" />
 
@@ -63,7 +65,7 @@
             <a class="navbar-brand d-block d-md-none" href="/">
               <img src="../assets/images/brand/logo/logo-2.svg" alt="Image" />
             </a>
-
+            {% if current_user.is_authenticated %}
             <a id="nav-toggle" href="#!" class="ms-auto ms-md-0 me-0 me-lg-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +80,7 @@
                 />
               </svg>
             </a>
+            {% endif %}
             <!--Navbar nav -->
             <ul
               class="navbar-nav navbar-right-wrap ms-lg-auto d-flex nav-top-wrap align-items-center ms-4 ms-lg-0"

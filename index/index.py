@@ -14,8 +14,6 @@ def index():
         return render_template('pages/landing.html')
 
     # Retrieve the email from the logged-in user
-    print('go to index.html');
-    user_email = current_user.email
     user_id = current_user.uuid
     print('user_id = ', user_id);
     # Query the database to get the customer_id and end_date
